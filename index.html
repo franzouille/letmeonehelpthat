@@ -97,34 +97,45 @@
 <body>
 
   <!-- ERROR SCREEN (shown when no ?q= param) -->
-  <div id="error-screen" style="display:none; align-items:center; justify-content:center;
-                                 height:100vh; background:#fff; font-family:system-ui;">
-    <div style="text-align:center; max-width:480px; padding:24px;">
-      <img src="./onehelphtml_files/mirakl-logo.png" alt="Mirakl" style="height:32px; margin-bottom:24px; filter: invert(10%) sepia(60%) saturate(600%) hue-rotate(185deg) brightness(40%);">
-      <p style="font-size:1.125rem; color:#1B2A4A; margin-bottom:20px;">
-        What's your question for One Help?
-      </p>
-      <form id="question-form" onsubmit="handleQuestion(event)"
-            style="display:flex; flex-direction:column; gap:12px; align-items:stretch;">
-        <input id="question-input" type="text" placeholder="Ex : How to configure price rules…"
-               autocomplete="off" spellcheck="false"
-               style="width:100%; box-sizing:border-box; padding:12px 16px; font-size:1rem;
-                      border:2px solid #e2e8f0; border-radius:12px; outline:none;
-                      font-family:system-ui; color:#1B2A4A; transition:border-color 0.2s;"
-               onfocus="this.style.borderColor='#1B2A4A'"
-               onblur="this.style.borderColor='#e2e8f0'">
-        <button type="submit"
-                style="padding:12px 24px; background:#1B2A4A; color:#fff; border:none;
-                       border-radius:10px; font-size:1rem; font-weight:500; cursor:pointer;
-                       font-family:system-ui; transition:opacity 0.2s;"
-                onmouseover="this.style.opacity='0.85'"
-                onmouseout="this.style.opacity='1'">
-          See it in action →
-        </button>
-      </form>
-      <p style="margin-top:16px; font-size:0.8rem; color:#9ca3af;">
-        Or add <code style="background:#f3f4f6;padding:2px 5px;border-radius:4px;">?q=your+question</code> directly to the URL
-      </p>
+  <div id="error-screen" style="display:none; flex-direction:column; height:100vh; background:#fff; font-family:system-ui;">
+
+    <!-- Top bar -->
+    <header style="height:3.5rem; background:#1B2A4A; display:flex; align-items:center; padding:0 20px; flex-shrink:0;">
+      <img src="./onehelphtml_files/mirakl-logo.png" alt="Mirakl" style="height:20px; width:auto; object-fit:contain; filter:brightness(10);">
+    </header>
+
+    <!-- Centered content -->
+    <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+      <div style="text-align:center; max-width:480px; padding:24px; width:100%;">
+
+        <!-- Sparkle + title -->
+        <img src="./onehelphtml_files/sparkle_dark.svg" alt="sparkle" style="width:36px; height:36px; display:block; margin:0 auto 16px;">
+        <p style="font-size:1.125rem; font-weight:600; color:#1B2A4A; margin:0 0 20px;">
+          What's your question for One Help?
+        </p>
+
+        <form id="question-form" onsubmit="handleQuestion(event)"
+              style="display:flex; flex-direction:column; gap:12px; align-items:stretch;">
+          <input id="question-input" type="text" placeholder="Ex : How to configure price rules…"
+                 autocomplete="off" spellcheck="false"
+                 style="width:100%; box-sizing:border-box; padding:12px 16px; font-size:1rem;
+                        border:2px solid #e2e8f0; border-radius:12px; outline:none;
+                        font-family:system-ui; color:#1B2A4A; transition:border-color 0.2s;"
+                 onfocus="this.style.borderColor='#1B2A4A'"
+                 onblur="this.style.borderColor='#e2e8f0'">
+          <button type="submit"
+                  style="padding:12px 24px; background:#1B2A4A; color:#fff; border:none;
+                         border-radius:10px; font-size:1rem; font-weight:500; cursor:pointer;
+                         font-family:system-ui; transition:opacity 0.2s;"
+                  onmouseover="this.style.opacity='0.85'"
+                  onmouseout="this.style.opacity='1'">
+            See it in action →
+          </button>
+        </form>
+        <p style="margin-top:16px; font-size:0.8rem; color:#9ca3af;">
+          Or add <code style="background:#f3f4f6;padding:2px 5px;border-radius:4px;">?q=your+question</code> directly to the URL
+        </p>
+      </div>
     </div>
   </div>
   <script>
