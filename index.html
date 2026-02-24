@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Let Me One Help That</title>
+  <link rel="stylesheet" href="./onehelphtml_files/index.CGqqJr8A.css">
+  <style>
+    /* Ensure full height layout */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #onehelp-ui {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Caret blinking */
+    #caret {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: #1B2A4A;
+      margin-left: 1px;
+      vertical-align: text-bottom;
+      animation: blink 0.8s step-end infinite;
+      opacity: 0;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Input focused state */
+    #input-container.input-focused {
+      border-color: #18476d !important;
+      box-shadow: 0 0 0 3px rgba(24, 71, 109, 0.15);
+    }
+
+    /* Cursor transitions */
+    #cursor {
+      transition: left 0.8s ease-in-out, top 0.8s ease-in-out, opacity 0.3s ease;
+    }
+
+    #cursor.no-transition {
+      transition: none !important;
+    }
+
+    /* Final & error screens */
+    #final-screen {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #final-screen.visible {
+      display: flex !important;
+      opacity: 1;
+    }
+
+    /* Product card icon fallback (initials) */
+    .product-icon-initials {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #18476d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #dde7f8;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: system-ui, sans-serif;
+      flex-shrink: 0;
+    }
+
+    /* Ensure placeholder text stays in position */
+    #placeholder-text {
+      color: #9ca3af;
+      font-style: italic;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    #typed-content {
+      color: #1a1a1a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ERROR SCREEN (shown when no ?q= param) -->
+  <div id="error-screen" style="display:none; align-items:center; justify-content:center;
+                                 height:100vh; background:#fff; font-family:system-ui;">
+    <div style="text-align:center; max-width:480px; padding:24px;">
+      <img src="./onehelphtml_files/mirakl-logo.png" alt="Mirakl" style="height:32px; margin-bottom:24px; filter: invert(10%) sepia(60%) saturate(600%) hue-rotate(185deg) brightness(40%);">
+      <p style="font-size:1.125rem; color:#1B2A4A; margin-bottom:20px;">
+        What's your question for One Help?
+      </p>
+      <form id="question-form" onsubmit="handleQuestion(event)"
+            style="display:flex; flex-direction:column; gap:12px; align-items:stretch;">
+        <input id="question-input" type="text" placeholder="Ex : How to configure price rules…"
+               autocomplete="off" spellcheck="false"
+               style="width:100%; box-sizing:border-box; padding:12px 16px; font-size:1rem;
+                      border:2px solid #e2e8f0; border-radius:12px; outline:none;
+                      font-family:system-ui; color:#1B2A4A; transition:border-color 0.2s;"
+               onfocus="this.style.borderColor='#1B2A4A'"
+               onblur="this.style.borderColor='#e2e8f0'">
+        <button type="submit"
+                style="padding:12px 24px; background:#1B2A4A; color:#fff; border:none;
+                       border-radius:10px; font-size:1rem; font-weight:500; cursor:pointer;
+                       font-family:system-ui; transition:opacity 0.2s;"
+                onmouseover="this.style.opacity='0.85'"
+                onmouseout="this.style.opacity='1'">
+          See it in action →
+        </button>
+      </form>
+      <p style="margin-top:16px; font-size:0.8rem; color:#9ca3af;">
+        Or add <code style="background:#f3f4f6;padding:2px 5px;border-radius:4px;">?q=your+question</code> directly to the URL
+      </p>
+    </div>
+  </div>
+  <script>
+    function handleQuestion(e) {
+      e.preventDefault();
+      const val = document.getElementById('question-input').value.trim();
+      if (!val) return;
+      window.location.search = '?q=' + encodeURIComponent(val);
+    }
+  </script>
+
+  <!-- MAIN ONE HELP UI -->
+  <div id="onehelp-ui">
+
+    <!-- NAVBAR -->
+    <header class="relative top-0 z-50 flex items-center justify-between w-full px-4 border-b shrink-0 bg-primary" style="height:3.5rem;">
+      <a href="https://help.mirakl.com/">
+        <img src="./onehelphtml_files/mirakl-logo.png" alt="Logo" class="h-[20px] w-auto object-contain">
+      </a>
+      <div class="flex items-center bg-[#2a3a4d] text-white rounded-lg pl-2 py-1 pr-1 h-8 border border-white/5">
+        <span class="mr-2 hidden md:block text-sm font-medium">One Help</span>
+        <span class="flex items-center justify-center rounded-full bg-yellow border-2 border-[#f6db9b] text-white font-semibold"
+              style="width:24px;height:24px;font-size:9px;">M</span>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative flex w-full flex-1 flex-col overflow-auto p-2" style="height:calc(100dvh - 3.5rem);">
+      <div class="flex flex-col items-center justify-between h-full w-full container mx-auto max-w-4xl">
+
+        <!-- Welcome / Sparkle section -->
+        <div class="flex-1 flex flex-col items-center justify-center gap-4 pb-4">
+          <div class="flex items-center gap-2">
+            <img src="./onehelphtml_files/sparkle_dark.svg" alt="sparkle" style="width:24px;height:24px;">
+            <h1 class="text-2xl font-semibold" style="color:#1B2A4A;">How can I help you today?</h1>
+          </div>
+        </div>
+
+        <!-- FORM SECTION -->
+        <div class="w-full max-w-2xl mx-auto mb-4">
+          <form id="fake-form" onsubmit="return false;">
+            <!-- Card container -->
+            <div id="input-container" class="bg-white rounded-3xl border-2 border-primary-foreground shadow relative"
+                 style="transition: border-color 0.2s, box-shadow 0.2s;">
+
+              <!-- Text input area -->
+              <div class="p-4 flex flex-row gap-2">
+                <div class="flex-1 min-h-[40px] p-2" style="position:relative;">
+                  <span id="placeholder-text">Ask a question</span><span id="typed-content"></span><span id="caret"></span>
+                </div>
+              </div>
+
+              <!-- Bottom bar -->
+              <div class="flex items-center justify-between px-3 pb-3 gap-2">
+
+                <!-- Left side: robot + operator -->
+                <div class="flex items-center gap-1">
+                  <!-- Robot button -->
+                  <button type="button" class="justify-center whitespace-nowrap rounded-md font-medium focus-visible:outline-none h-10 flex items-center gap-2 text-sm p-2" style="cursor:default;">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24">
+                      <path fill="currentColor" d="M4 15q-1.25 0-2.125-.875T1 12t.875-2.125T4 9V7q0-.825.588-1.412T6 5h3q0-1.25.875-2.125T12 2t2.125.875T15 5h3q.825 0 1.413.588T20 7v2q1.25 0 2.125.875T23 12t-.875 2.125T20 15v4q0 .825-.587 1.413T18 21H6q-.825 0-1.412-.587T4 19zm6.063-2.437q.437-.438.437-1.063t-.437-1.062T9 10t-1.062.438T7.5 11.5t.438 1.063T9 13t1.063-.437m6 0q.437-.438.437-1.063t-.437-1.062T15 10t-1.062.438T13.5 11.5t.438 1.063T15 13t1.063-.437M8 17h8v-2H8zm-2 2h12V7H6zm6-6"></path>
+                    </svg>
+                  </button>
+
+                  <!-- Operator selector -->
+                  <button type="button" class="justify-center whitespace-nowrap rounded-md font-medium focus-visible:outline-none h-10 flex items-center gap-2 text-sm p-2" style="cursor:default;">
+                    <span class="font-medium capitalize text-sm" style="color:#374151;">operator</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24">
+                      <path fill="currentColor" d="m12 15.4l-6-6L7.4 8l4.6 4.6L16.6 8L18 9.4z"></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Right side: send button -->
+                <button id="send-btn" type="submit"
+                        class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium h-10 w-10 rounded-full"
+                        style="background:#cbd5e1; color:#94a3b8; cursor:not-allowed; opacity:0.5; transition: background 0.3s, color 0.3s, opacity 0.3s;"
+                        disabled>
+                  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M11 20V7.825l-5.6 5.6L4 12l8-8l8 8l-1.4 1.425l-5.6-5.6V20z"></path>
+                  </svg>
+                  <span class="sr-only">Send message</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- PRODUCTS SECTION -->
+        <div class="w-full max-w-2xl mx-auto mb-8">
+          <h2 class="text-xl font-semibold text-left mb-4" style="color:#1f2937;">🤖 Our products</h2>
+          <div class="grid grid-cols-2 gap-3">
+
+            <!-- Mirakl Connect -->
+            <div class="rounded-xl bg-white shadow cursor-pointer transition-all duration-200 border-2 border-primary-foreground" style="opacity:1;">
+              <div class="p-4 flex items-center gap-3" style="min-height:52px; max-height:52px;">
+                <div class="product-icon-initials">Co</div>
+                <h3 class="font-medium text-sm capitalize" style="color:#1f2937;">Mirakl Connect</h3>
+              </div>
+            </div>
+
+            <!-- Mirakl Platform -->
+            <div class="rounded-xl bg-white shadow cursor-pointer transition-all duration-200 border-2 border-primary-foreground" style="opacity:1;">
+              <div class="p-4 flex items-center gap-3" style="min-height:52px; max-height:52px;">
+                <div class="product-icon-initials">Pl</div>
+                <h3 class="font-medium text-sm capitalize" style="color:#1f2937;">Mirakl Platform</h3>
+              </div>
+            </div>
+
+            <!-- Mirakl Catalog -->
+            <div class="rounded-xl bg-white shadow cursor-pointer transition-all duration-200 border-2 border-primary-foreground" style="opacity:1;">
+              <div class="p-4 flex items-center gap-3" style="min-height:52px; max-height:52px;">
+                <div class="product-icon-initials">Ca</div>
+                <h3 class="font-medium text-sm capitalize" style="color:#1f2937;">Mirakl Catalog</h3>
+              </div>
+            </div>
+
+            <!-- Mirakl Ads -->
+            <div class="rounded-xl bg-white shadow cursor-pointer transition-all duration-200 border-2 border-primary-foreground" style="opacity:1;">
+              <div class="p-4 flex items-center gap-3" style="min-height:52px; max-height:52px;">
+                <div class="product-icon-initials">Ad</div>
+                <h3 class="font-medium text-sm capitalize" style="color:#1f2937;">Mirakl Ads</h3>
+              </div>
+            </div>
+
+            <!-- Mirakl Payout -->
+            <div class="rounded-xl bg-white shadow cursor-pointer transition-all duration-200 border-2 border-primary-foreground" style="opacity:1;">
+              <div class="p-4 flex items-center gap-3" style="min-height:52px; max-height:52px;">
+                <div class="product-icon-initials">Pa</div>
+                <h3 class="font-medium text-sm capitalize" style="color:#1f2937;">Mirakl Payout</h3>
+              </div>
+            </div>
+
+            <!-- Connectors -->
+            <div class="rounded-xl bg-white shadow cursor-pointer transition-all duration-200 border-2 border-primary-foreground" style="opacity:1;">
+              <div class="p-4 flex items-center gap-3" style="min-height:52px; max-height:52px;">
+                <div class="h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                     style="background:linear-gradient(to bottom right, #f9fbfe, #c5d7f4); border: 1px solid rgba(148,163,184,0.3); position:relative;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#18476d">
+                    <path d="M15 7h2a5 5 0 0 1 0 10h-2v-2h2a3 3 0 0 0 0-6h-2V7zm-4 0h2v10h-2V7zm-4 2H5a3 3 0 0 0 0 6h2v2H5A5 5 0 0 1 5 7h2v2z"/>
+                  </svg>
+                </div>
+                <h3 class="font-medium text-sm capitalize" style="color:#1f2937;">Connectors</h3>
+              </div>
+            </div>
+
+            <!-- All Products -->
+            <div class="rounded-xl bg-white shadow cursor-pointer transition-all duration-200 border-2 border-primary-foreground col-span-2" style="opacity:1;">
+              <div class="p-4 flex items-center gap-3" style="min-height:52px; max-height:52px;">
+                <div class="h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                     style="background:linear-gradient(to bottom right, #f9fbfe, #c5d7f4); border: 1px solid rgba(148,163,184,0.3);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#18476d">
+                    <path d="M3 3h8v8H3zm0 10h8v8H3zm10-10h8v8h-8zm0 10h8v8h-8z"/>
+                  </svg>
+                </div>
+                <h3 class="font-medium text-sm capitalize" style="color:#1f2937;">All Products</h3>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div><!-- /#onehelp-ui -->
+
+  <!-- FINAL SCREEN -->
+  <div id="final-screen" style="display:none; opacity:0; align-items:center;
+                                 justify-content:center; height:100vh; background:#fff;
+                                 transition:opacity 0.5s ease; font-family:system-ui;">
+    <div style="text-align:center; max-width:400px; padding:24px;">
+      <div style="font-size:48px; margin-bottom:16px;">💡</div>
+      <h1 style="font-size:1.5rem; font-weight:600; color:#1B2A4A; margin-bottom:8px;">
+        One Help is here for you
+      </h1>
+      <p style="color:#6b7280; margin-bottom:24px;">help.mirakl.com</p>
+      <a id="go-btn" href="https://help.mirakl.com/" target="_blank"
+         style="display:inline-block; background:#1B2A4A; color:#fff; border-radius:8px;
+                padding:12px 24px; text-decoration:none; font-weight:500;">
+        Ask my question on One Help →
+      </a>
+      <p id="clipboard-msg" style="margin-top:12px; font-size:0.8rem; color:#6b7280; opacity:0; transition:opacity 0.4s;">✓ Question copied to clipboard</p>
+    </div>
+  </div>
+
+  <!-- CURSOR SVG -->
+  <svg id="cursor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 28" width="20" height="28"
+       style="position:fixed; opacity:0; pointer-events:none; z-index:9999; left:0; top:0;">
+    <path d="M2 2 L2 22 L7 17 L11 26 L14 24.5 L10 15.5 L16 15.5 Z"
+          fill="black" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+  </svg>
+
+  <script>
+    (function () {
+      // ─── Parse query string ───────────────────────────────────────────────
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+
+      const errorScreen  = document.getElementById('error-screen');
+      const onehelpUI    = document.getElementById('onehelp-ui');
+      const finalScreen  = document.getElementById('final-screen');
+      const cursor       = document.getElementById('cursor');
+      const inputContainer = document.getElementById('input-container');
+      const placeholderText = document.getElementById('placeholder-text');
+      const typedContent  = document.getElementById('typed-content');
+      const caretEl      = document.getElementById('caret');
+      const sendBtn      = document.getElementById('send-btn');
+
+      // No ?q= param → show error screen
+      if (!q || q.trim() === '') {
+        onehelpUI.style.display = 'none';
+        errorScreen.style.display = 'flex';
+        return;
+      }
+
+      // ─── Helper: get element center coords ───────────────────────────────
+      function getCenter(el) {
+        const rect = el.getBoundingClientRect();
+        return {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2
+        };
+      }
+
+      // ─── Helper: move cursor to position ─────────────────────────────────
+      function moveCursor(x, y) {
+        cursor.style.left = x + 'px';
+        cursor.style.top  = y + 'px';
+      }
+
+      // ─── Helper: cursor click effect (scale bounce) ───────────────────────
+      function clickEffect(el) {
+        return new Promise(resolve => {
+          el.style.transform = 'scale(0.8)';
+          setTimeout(() => {
+            el.style.transform = 'scale(1)';
+            setTimeout(resolve, 150);
+          }, 120);
+        });
+      }
+
+      // ─── Helper: delay ────────────────────────────────────────────────────
+      function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+      // ─── Main animation ───────────────────────────────────────────────────
+      async function runAnimation() {
+
+        // t=0: UI visible, cursor hidden
+        await delay(800);
+
+        // t=800ms: Show cursor at top-right (no animation)
+        cursor.classList.add('no-transition');
+        moveCursor(window.innerWidth * 0.82, window.innerHeight * 0.08);
+        cursor.style.opacity = '1';
+
+        // Force reflow so the no-transition position sticks
+        cursor.getBoundingClientRect();
+
+        // Re-enable transitions
+        cursor.classList.remove('no-transition');
+        cursor.style.transition = 'left 0.8s ease-in-out, top 0.8s ease-in-out, opacity 0.3s ease, transform 0.15s ease';
+
+        // Move cursor toward input center
+        const inputCenter = getCenter(inputContainer);
+        moveCursor(inputCenter.x - 10, inputCenter.y - 14);
+
+        // t=800+800=1600ms: cursor arrives at input
+        await delay(900);
+
+        // Click effect on cursor itself
+        await clickEffect(cursor);
+
+        // Focus input visually
+        inputContainer.classList.add('input-focused');
+
+        // Show caret, hide placeholder
+        placeholderText.style.display = 'none';
+        caretEl.style.opacity = '1';
+
+        await delay(200);
+
+        // ─── TYPE the question ──────────────────────────────────────────
+        const text = decodeURIComponent(q.replace(/\+/g, ' '));
+        for (let i = 0; i < text.length; i++) {
+          typedContent.textContent += text[i];
+          await delay(50);
+        }
+
+        // Typing done — activate send button
+        await delay(500);
+
+        sendBtn.style.background = '#1B2A4A';
+        sendBtn.style.color = '#ffffff';
+        sendBtn.style.cursor = 'pointer';
+        sendBtn.style.opacity = '1';
+        sendBtn.removeAttribute('disabled');
+
+        await delay(100);
+
+        // ─── Move cursor to send button ──────────────────────────────────
+        cursor.style.transition = 'left 0.4s ease-in-out, top 0.4s ease-in-out, opacity 0.3s ease, transform 0.15s ease';
+        const sendCenter = getCenter(sendBtn);
+        moveCursor(sendCenter.x - 10, sendCenter.y - 14);
+
+        await delay(500);
+
+        // Click the send button
+        await clickEffect(cursor);
+
+        // Visual click on the button itself
+        sendBtn.style.transform = 'scale(0.85)';
+        setTimeout(() => { sendBtn.style.transform = 'scale(1)'; }, 150);
+
+        await delay(600);
+
+        // ─── Fade out UI ──────────────────────────────────────────────────
+        cursor.style.opacity = '0';
+        onehelpUI.style.opacity = '0';
+
+        await delay(500);
+
+        onehelpUI.style.display = 'none';
+
+        // ─── Show final screen ────────────────────────────────────────────
+        finalScreen.style.display = 'flex';
+        // Force reflow
+        finalScreen.getBoundingClientRect();
+        finalScreen.style.opacity = '1';
+
+        // Update CTA link to include the question
+        const goBtn = document.getElementById('go-btn');
+        goBtn.href = 'https://help.mirakl.com/?q=' + encodeURIComponent(text);
+
+        // Copy question to clipboard automatically
+        const clipboardMsg = document.getElementById('clipboard-msg');
+        navigator.clipboard.writeText(text).then(() => {
+          clipboardMsg.style.opacity = '1';
+        }).catch(() => {});
+
+        // Re-copy on button click (in case clipboard was overwritten)
+        goBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(text).catch(() => {});
+        });
+      }
+
+      // Kick off animation
+      runAnimation();
+
+    })();
+  </script>
+
+</body>
+</html>
