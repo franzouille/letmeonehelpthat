@@ -318,6 +318,15 @@
         Ask my question on One Help →
       </a>
       <p id="clipboard-msg" style="margin-top:12px; font-size:0.8rem; color:#6b7280; opacity:0; transition:opacity 0.4s;">✓ Question copied to clipboard</p>
+      <button id="share-btn" onclick="shareLink()"
+              style="margin-top:16px; background:none; border:none; cursor:pointer;
+                     font-size:0.85rem; color:#6b7280; text-decoration:underline;
+                     font-family:system-ui; transition:color 0.2s;"
+              onmouseover="this.style.color='#1B2A4A'"
+              onmouseout="this.style.color='#6b7280'">
+        Share this link
+      </button>
+      <p id="share-msg" style="margin-top:6px; font-size:0.8rem; color:#6b7280; opacity:0; transition:opacity 0.4s;">✓ Link copied to clipboard</p>
     </div>
   </div>
 
@@ -481,6 +490,16 @@
         goBtn.addEventListener('click', () => {
           navigator.clipboard.writeText(text).catch(() => {});
         });
+
+        // Share link button
+        window.shareLink = function() {
+          const url = window.location.href;
+          navigator.clipboard.writeText(url).then(() => {
+            const shareMsg = document.getElementById('share-msg');
+            shareMsg.style.opacity = '1';
+            setTimeout(() => { shareMsg.style.opacity = '0'; }, 2500);
+          }).catch(() => {});
+        };
       }
 
       // Kick off animation
