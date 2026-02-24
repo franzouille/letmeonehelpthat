@@ -7,7 +7,7 @@ Paste a question in the URL, share the link, and watch the magic happen.
 ## Demo
 
 ```
-https://<username>.github.io/let-me-onehelp-that/?q=How+to+configure+price+rules
+https://franzouille.github.io/letmeonehelpthat/?q=How+to+configure+price+rules
 ```
 
 The page will:
@@ -22,7 +22,7 @@ The page will:
 Simply append your question as a `q` query parameter:
 
 ```
-https://<username>.github.io/let-me-onehelp-that/?q=Your+question+here
+https://franzouille.github.io/letmeonehelpthat/?q=Your+question+here
 ```
 
 ### Examples
@@ -60,7 +60,7 @@ let-me-onehelp-that/
    git push origin main
    ```
 5. Go to **Settings → Pages → Source**: select `main` branch, click **Save**
-6. Your site is live at `https://<username>.github.io/let-me-onehelp-that/`
+6. Your site is live at `https://franzouille.github.io/letmeonehelpthat/`
 
 ## Local Development
 
